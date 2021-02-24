@@ -19,10 +19,11 @@ class _HomePageState extends State<HomePage>{
   bool   gameHasStarted = false;
   static double barrierOne = 0;
   double barrierTwo = barrierOne + 1.6;
-  int score = 0;
-  int highscore = 0;
+  double _points = 0;
+  double _highPoints = 0;
 
   void jump() {
+    //MOVIMENTO DE PULO DO PASSARO
     setState(() {
       time = 0;
       initialHeight = birdMov1;
@@ -36,69 +37,38 @@ class _HomePageState extends State<HomePage>{
       height = -4.9 * time * time + 2 * time;
       setState((){
         birdMov1 = initialHeight - height;
+        _points += 0.02;
 
+        //POSICIONAMENTO DAS BARREIRAS DO GAME
        setState(() {
-         if (barrierOne < -1.1) {
-           barrierOne += 2.8;
+         if (barrierOne < -2) {
+           barrierOne += 3.5;
          } else {
            barrierOne -= 0.05;
          }
        });
 
         setState(() {
-          if (barrierTwo < -1.1) {
-            barrierTwo += 2.8;
+          if (barrierTwo < -2) {
+            barrierTwo += 3.5;
           } else {
             barrierTwo -= 0.05;
           }
         });
-
       });
+
+     //END GAME
       if (birdMov1 > 1){
+        if(_points > _highPoints){
+          _highPoints = _points;
+        }
         timer.cancel();
         gameHasStarted = false;
       }
     });
   }
 
-  // Todo EXIBE SCORE E JANELA PARA REINICIO DO GAME
- /* void _showDialog(){
-    showDialog(
-      context: context,
-      builder: (BuildContext context){
-        return AlertDialog(
-          backgroundColor: Colors.black26,
-          title: Text(
-            "GAME OVER",
-            style: TextStyle(color: Colors.white),
-          ),
-          content: Text (
-            "SCORE:" + score.toString(),
-            style: TextStyle(color: Colors.white),
-          ),
-          actions: [
-            FlatButton (
-              child: Text(
-                "PLAY AGAIN",
-                style: TextStyle(color: Colors.white),
-              ),
-              onPressed: (){
-                if (score > highscore){
-                  highscore = score;
-                }
-                initState();
-                setState(() {
-                  gameHasStarted = false;
-                });
-                Navigator.of(context).pop();
-              },
-            )
-          ],
-        );
-      }
-    );
-  }*/
-
+  //DETECTOR DE TAP
   @override
   Widget build(BuildContext context){
     return GestureDetector(
@@ -109,6 +79,7 @@ class _HomePageState extends State<HomePage>{
           startGame();
         }
       },
+
       child: Scaffold(
         body: Column(
           children: [
@@ -133,6 +104,7 @@ class _HomePageState extends State<HomePage>{
                       )),
                   ),
 
+                //BARREIRAS DO GAME
                 AnimatedContainer(
                   alignment: Alignment(barrierOne, 1.1),
                   duration: Duration(milliseconds : 0),
@@ -171,6 +143,8 @@ class _HomePageState extends State<HomePage>{
               height: 15,
               color: Colors.green,
             ),
+
+            //LAYOUT DA PONTUACAO ATUAL E MELHOR PONTUACAO
             Expanded
               (child: Container(
               color: Colors.brown,
@@ -184,7 +158,7 @@ class _HomePageState extends State<HomePage>{
                     SizedBox(
                       height: 20,
                     ),
-                    Text(score.toString(), style: TextStyle(color: Colors.white, fontSize: 35))
+                    Text(_points.toInt().toString(), style: TextStyle(color: Colors.white, fontSize: 35))
                      ],
                    ),
                 Column(
@@ -194,7 +168,7 @@ class _HomePageState extends State<HomePage>{
                     SizedBox(
                       height: 20,
                     ),
-                    Text(highscore.toString(), style: TextStyle(color: Colors.white, fontSize: 35))
+                    Text(_highPoints.toInt().toString(), style: TextStyle(color: Colors.white, fontSize: 35))
                   ],
                 ),
               ],
