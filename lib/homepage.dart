@@ -23,6 +23,17 @@ class _HomePageState extends State<HomePage> {
 
   @override
   void initState(){
+      gameHasStarted = false;
+      birdMov1 = 0;
+      time = 0;
+      initialHeight = birdMov1;
+      barrierOne = 1.8;
+      barrierTwo = 1.8 + 1.5;
+      _points = 0;
+    super.initState();
+  }
+
+  void onInit(){
     setState(() {
       gameHasStarted = false;
       birdMov1 = 0;
@@ -34,16 +45,36 @@ class _HomePageState extends State<HomePage> {
     });
   }
 
+  //INICIO DE PULO DO PASSARO
   void jump() {
-    //MOVIMENTO DE PULO DO PASSARO
     setState(() {
       time = 0;
       initialHeight = birdMov1;
     });
   }
 
+  //CHECAGEM DE COLISAO DE BARREIRAS
+  bool checkBarrierCollision(){
+    //SE A BARREIA ESTIVER ENTRE AS POSICOES // BARREIRA 1
+        if (barrierOne > -0.2 && barrierOne < 0.8){
+          //SE O PASSARO ESTIVER NO LOCAL X
+        if(birdMov1 < -0.5 || birdMov1 > 0.5){
+            return true;
+        }
+      }
+        //SE A BARREIA ESTIVER ENTRE AS POSICOES // BARREIRA 2
+      if (barrierTwo > -0.2 && barrierTwo < 0.8){
+        //SE O PASSARO ESTIVER NO LOCAL X
+        if(birdMov1 < -0.7 || birdMov1 > 0.7){
+          return true;
+        }
+      }
+      return false;
+  }
+
   void startGame() {
     gameHasStarted = true;
+    //CALCULO DA GRAVIDADE DO SALTO DO PASSARO
     Timer.periodic(Duration(milliseconds: 60), (timer) {
       time += 0.05;
       height = -4.9 * time * time + 2 * time;
@@ -51,7 +82,7 @@ class _HomePageState extends State<HomePage> {
         birdMov1 = initialHeight - height;
         _points += 0.02;
 
-        //POSICIONAMENTO DAS BARREIRAS DO GAME
+        //LOOPING PARA EXIBIR BARREIRAS
         setState(() {
           if (barrierOne < -2) {
             barrierOne += 3.5;
@@ -59,7 +90,6 @@ class _HomePageState extends State<HomePage> {
             barrierOne -= 0.05;
           }
         });
-
         setState(() {
           if (barrierTwo < -2) {
             barrierTwo += 3.5;
@@ -67,8 +97,8 @@ class _HomePageState extends State<HomePage> {
             barrierTwo -= 0.05;
           }
         });
-        //END GAME
-        if (birdMov1 > 1){
+        //SE PASSARO CAIR NO CHAO OU COLIDIR END GAME
+        if (birdMov1 > 1 || checkBarrierCollision()){
           timer.cancel();
           _showDialog();
         }
@@ -76,22 +106,22 @@ class _HomePageState extends State<HomePage> {
     });
   }
 
-  //JANELA E LAYOUT DE GAMEOVER TRYAGAIN
+  //JANELA E BOTAO GAMEOVER PLAYAGAIN
   void _showDialog(){
     showDialog(
         context: context,
         builder: (BuildContext context){
           return AlertDialog(
-            backgroundColor: Colors.black12,
+            backgroundColor: Colors.black26,
               title: Text('GAME OVER',
                   style: TextStyle(color: Colors.white)),
               actions:[FlatButton(onPressed: () {
-                if (birdMov1 > 1) {
+                if (birdMov1 > 1 || gameHasStarted == true) {
                   if (_points > _highPoints) {
                     _highPoints = _points;
                   }
                 }
-                initState();
+                onInit();
                 setState(() {
                   gameHasStarted = false;
                 });
@@ -99,7 +129,7 @@ class _HomePageState extends State<HomePage> {
                 }, child: Text('PLAY AGAIN', style: TextStyle(color: Colors.white)))],
             );
           }
-        );
+       );
   }
 
   //DETECTOR DE TAP
@@ -159,7 +189,7 @@ class _HomePageState extends State<HomePage> {
                       alignment: Alignment(barrierTwo, 1.1),
                       duration: Duration(milliseconds: 0),
                       child: MyBarrier(
-                        size: 100.0,
+                        size: 115.0,
                       ),
                     ),
 
@@ -167,7 +197,7 @@ class _HomePageState extends State<HomePage> {
                       alignment: Alignment(barrierTwo, -1.1),
                       duration: Duration(milliseconds: 0),
                       child: MyBarrier(
-                        size: 100.0,
+                        size: 115.0,
                       ),
                     )
 
@@ -207,11 +237,11 @@ class _HomePageState extends State<HomePage> {
                       ),
                       Text(_highPoints.toInt().toString(),
                           style: TextStyle(color: Colors.white, fontSize: 35))
-                    ],
-                  ),
-                ],
+                      ],
+                    ),
+                  ],
+                ),
               ),
-            ),
             ),
           ],
         ),
