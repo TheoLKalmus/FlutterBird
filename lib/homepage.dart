@@ -55,14 +55,14 @@ class _HomePageState extends State<HomePage> {
 
   //CHECAGEM DE COLISAO DE BARREIRAS
   bool checkBarrierCollision(){
-    //SE A BARREIA ESTIVER ENTRE AS POSICOES // BARREIRA 1
+    //SE A BARREIRA ESTIVER ENTRE AS POSICOES // BARREIRA 1
         if (barrierOne > -0.2 && barrierOne < 0.8){
           //SE O PASSARO ESTIVER NO LOCAL X
         if(birdMov1 < -0.5 || birdMov1 > 0.5){
             return true;
         }
       }
-        //SE A BARREIA ESTIVER ENTRE AS POSICOES // BARREIRA 2
+        //SE A BARREIRA ESTIVER ENTRE AS POSICOES // BARREIRA 2
       if (barrierTwo > -0.2 && barrierTwo < 0.8){
         //SE O PASSARO ESTIVER NO LOCAL X
         if(birdMov1 < -0.7 || birdMov1 > 0.7){
@@ -132,7 +132,6 @@ class _HomePageState extends State<HomePage> {
        );
   }
 
-  //DETECTOR DE TAP
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
@@ -151,7 +150,7 @@ class _HomePageState extends State<HomePage> {
                 flex: 2,
                 child: Stack(
                   children: [
-
+                    //CONTAINER ANIMADO DO PASSARO
                     AnimatedContainer(
                       alignment: Alignment(0, birdMov1),
                       duration: Duration(milliseconds: 0),
