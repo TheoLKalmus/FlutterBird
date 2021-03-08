@@ -1,10 +1,5 @@
-# flutter_first_app
-
-A new Flutter application.
-
-## Getting Started
-
-This project is a starting point for a Flutter application.
+# Flappy Chicken  
+How long a chicken can fly? Find it out!
 
 A few resources to get you started if this is your first Flutter project:
 
